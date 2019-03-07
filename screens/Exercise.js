@@ -1,9 +1,10 @@
 import React from "react";
-import {Button} from 'react-native';
-import {Content, Container} from 'native-base';
-import WeightList from "../components/WeightList";
+import {Button, StyleSheet, View} from 'react-native';
+import {Content, Container, Text} from 'native-base';
 import * as firebase from 'firebase';
+import WeightList from "../components/WeightList";
 import 'firebase/firestore';
+import {LineChart, Grid, YAxis} from 'react-native-svg-charts'
 
 export default class ExerciseScreen extends React.Component {
 
@@ -31,7 +32,8 @@ export default class ExerciseScreen extends React.Component {
 
         this.state = {
             loading: true,
-            data: []
+            data: [],
+            weights: []
         };
     }
 
@@ -45,6 +47,7 @@ export default class ExerciseScreen extends React.Component {
 
     onCollectionUpdate = (querySnapshot) => {
         const data = [];
+        const weights = [];
         querySnapshot.forEach((doc) => {
             const {value, createdAt, unitMeasure} = doc.data();
             data.push({
@@ -53,12 +56,17 @@ export default class ExerciseScreen extends React.Component {
                 value,
                 unitMeasure
             });
+
+            weights.push(value);
         });
 
         this.setState({
             data,
+            weights,
             loading: false,
         });
+
+        console.log(this.state.weights);
     };
 
     onEdit(weight) {
@@ -81,16 +89,57 @@ export default class ExerciseScreen extends React.Component {
     }
 
     render() {
+
+        const data = [30, 40, 50, 60, 70, 50, 80];
+        const contentInset = {top: 20, bottom: 20};
+
         return (
             <Container>
                 <Content>
-                    <WeightList
-                        onEdit={(entity) => this.onEdit(entity)}
-                        onDelete={(key) => this.onDelete(key)}
-                        data={this.state.data}
-                    />
+                    <View style={styles.container}>
+                        <Text style={styles.title}>Your progress</Text>
+                        <View style={{height: 200, flexDirection: 'row'}}>
+                            <YAxis
+                                data={data}
+                                contentInset={contentInset}
+                                svg={{
+                                    fill: 'grey',
+                                    fontSize: 10,
+                                }}
+                            />
+                            <LineChart
+                                style={{flex: 1, marginLeft: 16}}
+                                data={data}
+                                svg={{stroke: 'rgb(134, 65, 244)'}}
+                                contentInset={contentInset}
+                            >
+                                <Grid/>
+                            </LineChart>
+                        </View>
+                    </View>
+
+                    <View styles={{marginTop: 24}}>
+                        <Text style={[styles.title, {marginLeft: 16}]}>Weights</Text>
+                        <WeightList
+                            onEdit={(entity) => this.onEdit(entity)}
+                            onDelete={(key) => this.onDelete(key)}
+                            data={this.state.data}
+                        />
+                    </View>
                 </Content>
             </Container>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        marginTop: 16,
+        marginLeft: 16,
+        marginRight: 16
+    },
+    title: {
+        fontSize: 25,
+        fontWeight: 'bold',
+    }
+});

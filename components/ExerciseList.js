@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
+import {View, FlatList, StyleSheet, Text} from 'react-native';
 import ExerciseCard from './ExerciseCard';
 
 export default class ExerciseList extends React.Component {
@@ -7,6 +7,7 @@ export default class ExerciseList extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <Text style={styles.title}>Exercises</Text>
                 <FlatList
                     data={this.props.data}
                     renderItem={({item}) =>
@@ -25,4 +26,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
+    title: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        marginLeft: 16,
+        marginTop: 16,
+        marginBottom: 16
+    }
 });

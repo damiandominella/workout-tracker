@@ -34,6 +34,7 @@ export default class ExerciseCard extends React.Component {
                 body={
                     <View style={styles.container}>
                         <TouchableHighlight
+                            style={{padding: 16}}
                             underlayColor={'#f5f5f5'}
                             onPress={() => this.onPress()}
                         >
@@ -66,19 +67,24 @@ export default class ExerciseCard extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        margin: -16,
+        flex: 1,
     },
     itemContainer: {
+        paddingTop: 8,
+        paddingBottom: 8,
+        paddingLeft: 16,
+        paddingRight: 16,
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 16
     },
     data: {
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#000'
+        color: '#000',
+        fontSize: 14
     },
     total: {
         flex: 0.15,

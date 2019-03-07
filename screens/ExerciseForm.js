@@ -1,5 +1,6 @@
 import React from "react";
-import {Container, Content, Form, Item, Input, Label, Button, Text} from 'native-base';
+import {Button} from 'react-native';
+import {Container, Content, Form, Item, Input, Label, Toast} from 'native-base';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 
@@ -8,8 +9,18 @@ export default class ExerciseFormScreen extends React.Component {
     static navigationOptions = ({navigation}) => {
         return {
             title: navigation.getParam('title', 'Add exercise'), // 2nd arg is default fallback
+            headerRight: (
+                <Button
+                    onPress={navigation.getParam('onSubmit')}
+                    title="Save"
+                />
+            ),
         };
     };
+
+    componentDidMount() {
+        this.props.navigation.setParams({ onSubmit: this.onSubmit });
+    }
 
     constructor(props) {
         super(props);
@@ -21,6 +32,7 @@ export default class ExerciseFormScreen extends React.Component {
 
         if (this.exercise !== null) {
             this.state = {
+                createdAt: this.exercise.createdAt,
                 name: this.exercise.name,
                 volume: this.exercise.volume,
                 rest: this.exercise.rest,
@@ -28,6 +40,7 @@ export default class ExerciseFormScreen extends React.Component {
             }
         } else {
             this.state = {
+                createdAt: null,
                 key: null,
                 name: null,
                 volume: null,
@@ -36,7 +49,15 @@ export default class ExerciseFormScreen extends React.Component {
         }
     }
 
-    onSubmit() {
+    showToast(success) {
+        Toast.show({
+            text: success? "Success!" : "Error!",
+            buttonText: "Ok",
+            duration: 3000
+        });
+    }
+
+    onSubmit = () => {
 
         let errors = [];
 
@@ -61,26 +82,30 @@ export default class ExerciseFormScreen extends React.Component {
                 name: this.state.name,
                 volume: this.state.volume,
                 rest: this.state.rest,
-                createdAt: +new Date()
+                createdAt: this.state.createdAt ? this.state.createdAt : +new Date()
             };
 
             if (this.state.key) {
                 this.ref.doc(this.state.key).set(body, {merge: true}).then(() => {
                     console.log("Document successfully written");
+                    this.showToast(true);
                     this.props.navigation.goBack();
                 }).catch((error) => {
+                    this.showToast(false);
                     console.error("Error adding document: ", error);
                 });
             } else {
                 this.ref.add(body).then((docRef) => {
                     console.log("Document written with ID: ", docRef.id);
+                    this.showToast(true);
                     this.props.navigation.goBack();
                 }).catch((error) => {
+                    this.showToast(false);
                     console.error("Error adding document: ", error);
                 });
             }
         }
-    }
+    };
 
     render() {
         return (
@@ -105,10 +130,6 @@ export default class ExerciseFormScreen extends React.Component {
                                    value={this.state.rest}/>
                         </Item>
                     </Form>
-
-                    <Button block onPress={() => this.onSubmit()}>
-                        <Text>Save</Text>
-                    </Button>
                 </Content>
             </Container>
         );

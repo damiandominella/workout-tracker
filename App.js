@@ -8,6 +8,7 @@ import WorkoutScreen from "./screens/Workout";
 import ExerciseScreen from "./screens/Exercise";
 import ExerciseFormScreen from "./screens/ExerciseForm";
 import WeightFormScreen from "./screens/WeightForm";
+import {Root} from 'native-base';
 
 const AppNavigator = createStackNavigator(
     {
@@ -35,6 +36,6 @@ export default class App extends React.Component {
     }
 
     render() {
-        return <AppContainer />;
+        return <Root><AppContainer /></Root>;
     }
 }

@@ -1,5 +1,6 @@
 import React from "react";
-import {Container, Content, Form, Item, Input, Label, Button, Text, Picker, Icon} from 'native-base';
+import {Button} from 'react-native';
+import {Container, Content, Form, Item, Input, Label, Picker, Icon} from 'native-base';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import {StyleSheet} from "react-native";
@@ -8,12 +9,23 @@ export default class WeightFormScreen extends React.Component {
 
     static navigationOptions = ({navigation}) => {
         return {
-            title: navigation.getParam('title', 'Add weight'), // 2nd arg is default fallback
+            title: navigation.getParam('title', 'Add weight'), // 2nd arg is default fallback,
+            headerRight: (
+                <Button
+                    onPress={navigation.getParam('onSubmit')}
+                    title="Save"
+                />
+            ),
         };
     };
 
+    componentDidMount() {
+        this.props.navigation.setParams({ onSubmit: this.onSubmit });
+    }
+
     constructor(props) {
         super(props);
+
 
         let exercise = this.props.navigation.getParam('exercise', null);
         this.weight = this.props.navigation.getParam('weight', null);
@@ -51,7 +63,8 @@ export default class WeightFormScreen extends React.Component {
             .catch(() => {});
     }
 
-    onSubmit() {
+    onSubmit = () => {
+
         let errors = [];
 
         if (!this.state.value || this.state.value === "") {
@@ -95,7 +108,7 @@ export default class WeightFormScreen extends React.Component {
                 });
             }
         }
-    }
+    };
 
     render() {
 
@@ -132,10 +145,6 @@ export default class WeightFormScreen extends React.Component {
                             </Picker>
                         </Item>
                     </Form>
-
-                    <Button block onPress={() => this.onSubmit()}>
-                        <Text>Save</Text>
-                    </Button>
                 </Content>
             </Container>
         );

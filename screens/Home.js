@@ -14,7 +14,7 @@ export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
 
-        this.ref = firebase.firestore().collection('workouts');
+        this.ref = firebase.firestore().collection('workouts').orderBy('createdAt', 'asc');
         this.unsubscribe = null;
 
         this.state = {
@@ -34,12 +34,13 @@ export default class HomeScreen extends React.Component {
     onCollectionUpdate = (querySnapshot) => {
         const data = [];
         querySnapshot.forEach((doc) => {
-            const {createdAt, name, image} = doc.data();
+            const {createdAt, name, image, description} = doc.data();
             data.push({
                 key: doc.id,
                 createdAt,
                 name,
-                image
+                image,
+                description
             });
         });
 
@@ -53,7 +54,7 @@ export default class HomeScreen extends React.Component {
 
         return (
             <Container>
-                <Content>
+                <Content style={{backgroundColor: '#f5f5f5'}}>
                     <WorkoutList
                         navigation={this.props.navigation}
                         data={this.state.data}
