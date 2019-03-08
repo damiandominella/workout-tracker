@@ -55,14 +55,6 @@ export default class WeightFormScreen extends React.Component {
         });
     }
 
-    updateLastWeight() {
-        this.ref.set({
-            lastWeight: this.state.value,
-            lastWeightUnitMeasure: this.state.unitMeasure}, {merge: true})
-            .then(() => {})
-            .catch(() => {});
-    }
-
     onSubmit = () => {
 
         let errors = [];
@@ -93,7 +85,6 @@ export default class WeightFormScreen extends React.Component {
             if (this.state.key) {
                 this.ref.collection('weights').doc(this.state.key).set(body, {merge: true}).then(() => {
                     console.log("Document successfully written");
-                    this.updateLastWeight();
                     this.props.navigation.goBack();
                 }).catch((error) => {
                     console.error("Error adding document: ", error);
@@ -101,7 +92,6 @@ export default class WeightFormScreen extends React.Component {
             } else {
                 this.ref.collection('weights').add(body).then((docRef) => {
                     console.log("Document written with ID: ", docRef.id);
-                    this.updateLastWeight();
                     this.props.navigation.goBack();
                 }).catch((error) => {
                     console.error("Error adding document: ", error);

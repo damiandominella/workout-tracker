@@ -23,6 +23,8 @@ export default class ExerciseScreen extends React.Component {
     constructor(props) {
         super(props);
 
+        console.log('halo');
+
         this.exercise = this.props.navigation.getParam('item');
 
         this.ref = firebase.firestore()
@@ -35,10 +37,12 @@ export default class ExerciseScreen extends React.Component {
             data: [],
             weights: []
         };
+
+        console.log(this.state.weights);
     }
 
     componentDidMount() {
-        this.unsubscribe = this.ref.collection('weights').orderBy("createdAt", "asc").onSnapshot(this.onCollectionUpdate)
+        this.unsubscribe = this.ref.collection("weights").orderBy("createdAt", "asc").onSnapshot(this.onCollectionUpdate)
     }
 
     componentWillUnmount() {
@@ -57,7 +61,7 @@ export default class ExerciseScreen extends React.Component {
                 unitMeasure
             });
 
-            weights.push(value);
+            weights.push(parseInt(value, 10));
         });
 
         this.setState({
@@ -90,8 +94,7 @@ export default class ExerciseScreen extends React.Component {
 
     render() {
 
-        const data = [30, 40, 50, 60, 70, 50, 80];
-        const contentInset = {top: 20, bottom: 20};
+        const contentInset = {top: 16, bottom: 16};
 
         return (
             <Container>
@@ -100,7 +103,7 @@ export default class ExerciseScreen extends React.Component {
                         <Text style={styles.title}>Your progress</Text>
                         <View style={{height: 200, flexDirection: 'row'}}>
                             <YAxis
-                                data={data}
+                                data={this.state.weights}
                                 contentInset={contentInset}
                                 svg={{
                                     fill: 'grey',
@@ -109,8 +112,11 @@ export default class ExerciseScreen extends React.Component {
                             />
                             <LineChart
                                 style={{flex: 1, marginLeft: 16}}
-                                data={data}
-                                svg={{stroke: 'rgb(134, 65, 244)'}}
+                                data={this.state.weights}
+                                svg={{
+                                    stroke: 'rgb(134, 65, 244)',
+                                    strokeWidth: 2
+                                }}
                                 contentInset={contentInset}
                             >
                                 <Grid/>
@@ -119,7 +125,6 @@ export default class ExerciseScreen extends React.Component {
                     </View>
 
                     <View styles={{marginTop: 24}}>
-                        <Text style={[styles.title, {marginLeft: 16}]}>Weights</Text>
                         <WeightList
                             onEdit={(entity) => this.onEdit(entity)}
                             onDelete={(key) => this.onDelete(key)}

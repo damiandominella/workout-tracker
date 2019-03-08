@@ -34,7 +34,6 @@ export default class ExerciseCard extends React.Component {
                 body={
                     <View style={styles.container}>
                         <TouchableHighlight
-                            style={{padding: 16}}
                             underlayColor={'#f5f5f5'}
                             onPress={() => this.onPress()}
                         >
@@ -47,9 +46,6 @@ export default class ExerciseCard extends React.Component {
                                 </Text>
                                 <Text style={[styles.data, styles.rec]}>
                                     {this.props.item.rest}
-                                </Text>
-                                <Text style={[styles.data, styles.weight]}>
-                                    {this.props.item.lastWeight} {this.props.item.lastWeightUnitMeasure}
                                 </Text>
                             </View>
                         </TouchableHighlight>
@@ -67,14 +63,13 @@ export default class ExerciseCard extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        margin: -16,
         flex: 1,
+        marginRight: -16,
+        marginTop: -16,
+        marginBottom: -16
     },
     itemContainer: {
-        paddingTop: 8,
-        paddingBottom: 8,
-        paddingLeft: 16,
-        paddingRight: 16,
+        padding: 16,
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
@@ -87,22 +82,16 @@ const styles = StyleSheet.create({
         fontSize: 14
     },
     total: {
-        flex: 0.15,
+        flex: 0.25,
         textAlign: 'right',
-    },
-    weight: {
-        flex: 0.20,
-        textAlign: 'right',
-        fontWeight: 'bold',
     },
     rec: {
-        flex: 0.20,
+        flex: 0.25,
         textAlign: 'right',
     },
     name: {
-        flex: 0.45,
+        flex: 0.50,
         paddingRight: 8,
-        borderRightWidth: 1,
         fontWeight: 'bold',
     }
 });

@@ -18,25 +18,6 @@ export default class WeightCard extends React.Component {
 
     render() {
 
-        let buttons = [
-            {
-                text: 'Edit',
-                backgroundColor: '#5bc8fa',
-                underlayColor: '#5bc8fa',
-                onPress: () => {
-                    this.edit()
-                }
-            },
-            {
-                text: 'Delete',
-                backgroundColor: '#ff3a30',
-                underlayColor: '#ff3a30',
-                onPress: () => {
-                    this.delete()
-                }
-            }
-        ];
-
         let date = new Date(this.props.item.createdAt);
 
         return (
@@ -74,7 +55,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 16
+        marginRight: -16,
+        marginTop: -16,
+        marginBottom: -16,
+        padding: 16,
     },
     weight: {
         flex: 0.30,

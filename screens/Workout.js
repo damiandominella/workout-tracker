@@ -1,5 +1,5 @@
 import React from "react";
-import {Button} from 'react-native';
+import {Button, StyleSheet, Image} from 'react-native';
 import {Content, Container} from 'native-base';
 import ExerciseList from "../components/ExerciseList";
 import * as firebase from 'firebase';
@@ -28,6 +28,7 @@ export default class WorkoutScreen extends React.Component {
         this.unsubscribe = null;
 
         this.state = {
+            workout: this.workout,
             loading: true,
             data: [],
         };
@@ -44,15 +45,13 @@ export default class WorkoutScreen extends React.Component {
     onCollectionUpdate = (querySnapshot) => {
         const data = [];
         querySnapshot.forEach((doc) => {
-            const {name, volume, rest, lastWeight, lastWeightUnitMeasure} = doc.data();
+            const {name, volume, rest} = doc.data();
             data.push({
                 key: doc.id,
                 workoutKey: this.workout.key,
                 name,
                 volume,
-                rest,
-                lastWeight,
-                lastWeightUnitMeasure
+                rest
             });
         });
 
@@ -88,6 +87,7 @@ export default class WorkoutScreen extends React.Component {
         return (
             <Container>
                 <Content>
+                    <Image source={{uri: this.state.workout.image}} style={styles.image}/>
                     <ExerciseList
                         onEdit={(entity) => this.onEdit(entity)}
                         onDelete={(key) => this.onDelete(key)}
@@ -99,3 +99,10 @@ export default class WorkoutScreen extends React.Component {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    image: {
+        flex: 1,
+        height: 200,
+    },
+});
